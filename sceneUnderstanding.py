@@ -10,10 +10,9 @@ def main() -> None:
     print(vertex_data)
 
     for vertex in vertex_data:
-        # print(vertex["id"])
+
         print()
         kind_list = vertex["kind-list"]
-        # print(kind_list)
         line_vertices:set[str] = set()
         regions:list[int] = []
 
@@ -25,7 +24,7 @@ def main() -> None:
 
         if len(line_vertices) < 3:
             vertex["type"] = "L"
-            # print(vertex["type"])
+            print("No links generated")
         elif (len(line_vertices) >= 3):
             points:list[tuple[int,int]] = []
 
@@ -78,8 +77,6 @@ def main() -> None:
                 else:
                     small_angles += 1
                             
-
-            # Classification logic
             if small_angles == 3:
                 vertex["type"] = "FORK"
                 print("Three links generated")
