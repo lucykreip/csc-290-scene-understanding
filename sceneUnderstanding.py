@@ -62,16 +62,27 @@ def main() -> None:
 
                 p2_angle = math.atan2(p2_y-p1_y, p2_x-p1_x)
 
+                # print(p2_angle)
+
+                # if p2_angle < 0:
+                #     p2_angle = 2*math.pi + p2_angle
+                
+                # print(p2_angle)
+
                 
                 p3_angle = math.atan2(p3_y-p1_y, p3_x-p1_x)
+                print(f"point3 angle negative: {math.degrees(p3_angle)}")
+
+                # if p3_angle < 0:
+                #     p3_angle = 2*math.pi + p3_angle
 
                 print(p2_x)
                 print(p2_y)
-                print(p2_angle)
+                print(f"point2 angle: {math.degrees(p2_angle)}")
 
                 print(p3_x)
                 print(p3_y)
-                print(p3_angle)
+                print(f"point3 angle: {math.degrees(p3_angle)}")
 
                 # if p3_angle > p2_angle:
                 angle_measure = p3_angle - p2_angle
@@ -79,7 +90,7 @@ def main() -> None:
                     # angle_measure = p2_angle - p3_angle
                 print(math.degrees(angle_measure))
 
-                print(angle_measure)
+                # print(angle_measure)
 
                 # if angle_measure < 0: 
                 #     angle_measure += 2*math.pi
