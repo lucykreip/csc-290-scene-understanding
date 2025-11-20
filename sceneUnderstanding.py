@@ -14,45 +14,56 @@ def main() -> None:
         print()
         kind_list = vertex["kind-list"]
         # print(kind_list)
-        line_vertices:set[str] = set()
+        # line_vertices:set[str] = set()
+        line_vertices:list[str] = []
         regions:list[int] = []
 
         for element in kind_list:
             if type(element) == str:
-                line_vertices.add(element)
+                # line_vertices.add(element)
+                line_vertices.append(element)
             elif type(element) == int:
                 regions.append(element)
 
-        if len(line_vertices) < 3:
+        if len(line_vertices) <= 3:
             vertex["type"] = "L"
             print("TYPE",vertex["type"])
             print("No links generated")
-        elif (len(line_vertices) >= 3):
+        elif (len(line_vertices) > 3):
             points:list[tuple[int,int]] = []
 
             points1 = vertex["coords"]
-            # print(points1)
             p1_x = points1[0]
             p1_y = points1[1]
 
             # i:int = 0
-            for vertex in vertex_data:
-                if vertex["id"] in line_vertices:
-                    points.append(vertex["coords"])
+            # for vertex in vertex_data:
+            #     if vertex["id"] in line_vertices:
+            #         points.append(vertex["coords"])
+
+            for vertex_id in line_vertices:
+                for vertex in vertex_data:
+                    if vertex["id"] == vertex_id:
+                        points.append(vertex["coords"])
+
+
+            print(points)
+            # points.sort()
+            print(points)
+
+
 
             big_angles:int = 0
             small_angles:int = 0
 
+            angle_measures:list[float] = []
+
             # print(points)
             
-            for i in range(len(points)):
+            for i in range(len(points)-1):
 
-                if i == len(points) - 1:
-                    points2 = points[i]
-                    points3 = points[0]
-                else:
-                    points2 = points[i]
-                    points3 = points[i+1]
+                points2 = points[i]
+                points3 = points[i+1]
 
                 p2_x = points2[0]
                 
@@ -64,59 +75,66 @@ def main() -> None:
                 p2_angle = math.atan2(p2_y-p1_y, p2_x-p1_x)
 
                 # print(p2_angle)
+                print(f"point2 angle negative: {math.degrees(p2_angle)}")
 
-                # if p2_angle < 0:
-                #     p2_angle = 2*math.pi + p2_angle
-                
-                # print(p2_angle)
 
                 
                 p3_angle = math.atan2(p3_y-p1_y, p3_x-p1_x)
                 print(f"point3 angle negative: {math.degrees(p3_angle)}")
 
-                # if p3_angle < 0:
-                #     p3_angle = 2*math.pi + p3_angle
 
-                # print(p2_x)
-                # print(p2_y)
-                # print(p2_angle)
+                print(p2_x)
+                print(p2_y)
+                print(math.degrees(p2_angle))
 
-                # print(p3_x)
-                # print(p3_y)
-                # print(p3_angle)
+                print(p3_x)
+                print(p3_y)
+                print(math.degrees(p3_angle))
 
-                if p3_angle > p2_angle:
-                    angle_measure = p3_angle - p2_angle
-                else: 
-                    angle_measure = p2_angle - p3_angle
+                # if p3_angle > p2_angle:
+                #     angle_measure = p3_angle - p2_angle
+                # else: 
+                #     angle_measure = p2_angle - p3_angle
+
+                angle_measure = p3_angle - p2_angle
+
                 print(math.degrees(angle_measure))
 
-                print(angle_measure)
+                final_angle = angle_measure % (2*math.pi)
 
-                # if angle_measure < 0: 
-                #     angle_measure += 2*math.pi
+                print(f"angle: {math.degrees(final_angle)}")
+
+                angle_measures.append(final_angle) 
 
                 # print(angle_measure)
 
-                # if angle_measure > 0 and angle_measure < math.pi:
-                #     small_angles +=1 
-                # elif angle_measure < 0 and angle_measure > -math.pi:
-                #     big_angles += 1
 
-                if angle_measure > math.pi:
+                if final_angle > math.pi:
                     big_angles += 1
-                elif angle_measure < math.pi:
+                elif final_angle < math.pi:
                     small_angles += 1
+
+            # final_angle_2 = 2*math.pi - angle_measures[0] - angle_measures[1]
+
+            # print(f"final angle: {math.degrees(final_angle_2)}")
+
+            # if final_angle_2 > math.pi:
+            #         big_angles += 1
+            # elif final_angle_2 < math.pi:
+            #     small_angles += 1
             
             # print(small_angles)
             # print(big_angles)
+
+            #  {"id":"E", "coords":[6,5], "kind-list":["D", 2, "B", 1, "G", 3, "D"]},
+
             links = []
             if small_angles == 3:
                 vertex["type"] = "FORK"
                 print("Three Links Generated")
                 for i in range(len(regions)):
                     for j in range(i + 1, len(regions)):
-                        links.append((regions[i], regions[j]))
+                        links.append((regions[i], regions[j])) #type: ignore
                         print()
                         print("Link created between regions", {regions[i]},{regions[j]} )
                         
@@ -124,7 +142,7 @@ def main() -> None:
                 vertex["type"] = "ARROW"
                 print("One link generated")
                 if len(regions) >= 2:
-                    links.append((regions[0], regions[1]))
+                    links.append((regions[0], regions[1])) #type: ignore
                     print()
                     print("Link created between regions", {regions[0]},{regions[1]} )
             else: 
