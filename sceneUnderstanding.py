@@ -13,8 +13,7 @@ def main() -> None:
     all_regions = set()
 
     for vertex in vertex_data:
-        print(vertex["id"])
-        print()
+        print("Vertex: ", vertex["id"])
         kind_list = vertex["kind-list"]
         line_vertices:list[str] = []
         regions:list[int] = []
@@ -27,7 +26,6 @@ def main() -> None:
                 all_regions.add(element) 
        
         if len(line_vertices) <= 3:
-           # print(vertex["coords"])
             vertex["type"] = "L"
             print("TYPE",vertex["type"])
             print("No links generated")
@@ -62,22 +60,12 @@ def main() -> None:
                 p3_y = points3[1]
 
                 p2_angle = math.atan2(p2_y-p1_y, p2_x-p1_x)
-
-                # print(p2_angle)
-                # print(f"point2 angle negative: {math.degrees(p2_angle)}")
-
-
                 
                 p3_angle = math.atan2(p3_y-p1_y, p3_x-p1_x)
-                # print(f"point3 angle negative: {math.degrees(p3_angle)}")
 
                 angle_measure = p3_angle - p2_angle
 
-                #print(math.degrees(angle_measure))
-
                 final_angle = angle_measure % (2*math.pi)
-
-                #print(f"angle: {math.degrees(final_angle)}")
 
 
                 if final_angle > math.pi:
@@ -87,11 +75,12 @@ def main() -> None:
 
                 angle_to_region.append((final_angle, regions[i]))
 
-                print(angle_to_region[i])
+                # print(angle_to_region[i])
 
             links:list[tuple[int,int]] = []
             if small_angles == 3:
                 vertex["type"] = "FORK"
+                print("TYPE:",vertex["type"])
                 print("Three Links Generated")
                 for i in range(len(regions)):
                     # links[regions[i]] = []
@@ -104,8 +93,9 @@ def main() -> None:
                         
             elif small_angles == 2 and big_angles == 1:
                 vertex["type"] = "ARROW"
+                print("TYPE:",vertex["type"])
                 print("One link generated")
-                print(regions)
+                # print(regions)
                 if len(regions) >= 2:
                     
                     angle_to_region.sort()
@@ -118,18 +108,23 @@ def main() -> None:
 
             else: 
                 vertex["type"] = "T"
+                print("TYPE:",vertex["type"])
                 print("No links generated")
-            print("TYPE:",vertex["type"])
+            # print("TYPE:",vertex["type"])
 
-            print(links)
+            # print(links)
             # printed list without the background
-            print("w/o background")
+            # print("w/o background")
             background = vertex_dict["background"]
             links = [(a, b) for (a, b) in links if background not in (a, b)]
-            print(links)
+            # print(links)
             # all the links in a list 
             all_links.extend(links)
+        print()
+
             
+    print("Nuclei merging Step:")
+    print("----------------------")
     nuclei: dict = {}
     background = vertex_dict["background"]
     for r in all_regions:
@@ -196,6 +191,8 @@ def main() -> None:
         else:
             break  
         
+    print()
+
     body_num = 1
     for nuclei_key, nuclei_data in nuclei.items():
         regions_list = sorted(nuclei_data['regions'])
