@@ -3,7 +3,7 @@ import json
 
 
 def main() -> None: 
-    file = open("cube.json","r")
+    file = open("one.json","r")
     vertex_dict = json.load(file)
 
     vertex_data = vertex_dict["vertex-data"]
@@ -50,7 +50,7 @@ def main() -> None:
                     if vertex["id"] == vertex_id:
                         points.append(vertex["coords"])
 
-
+            print(line_vertices)
             print(points1)
             print(points)
 
@@ -73,6 +73,10 @@ def main() -> None:
                 p3_y = points3[1]
 
                 p2_angle = math.atan2(p2_y-p1_y, p2_x-p1_x)
+                # p2_angle = math.atan2(p1_y-p2_y, p1_x-p2_x)
+
+
+                print(math.degrees(p2_angle))
 
                 # print(p2_angle)
                 # print(f"point2 angle negative: {math.degrees(p2_angle)}")
@@ -80,6 +84,8 @@ def main() -> None:
 
                 
                 p3_angle = math.atan2(p3_y-p1_y, p3_x-p1_x)
+                # p3_angle = math.atan2(p1_y-p3_y, p1_x-p3_x)
+                print(math.degrees(p3_angle))
                 # print(f"point3 angle negative: {math.degrees(p3_angle)}")
 
                 angle_measure = p3_angle - p2_angle
