@@ -10,7 +10,7 @@ def main() -> None:
     print(vertex_data)
 
     for vertex in vertex_data:
-        # print(vertex["id"])
+        print(vertex["id"])
         print()
         kind_list = vertex["kind-list"]
         # print(kind_list)
@@ -26,11 +26,15 @@ def main() -> None:
                 regions.append(element)
 
         if len(line_vertices) <= 3:
+            print(vertex["coords"])
             vertex["type"] = "L"
             print("TYPE",vertex["type"])
             print("No links generated")
+
         elif (len(line_vertices) > 3):
             points:list[tuple[int,int]] = []
+
+            angle_to_region:list[tuple[float,int]] = []
 
             points1 = vertex["coords"]
             p1_x = points1[0]
@@ -47,8 +51,7 @@ def main() -> None:
                         points.append(vertex["coords"])
 
 
-            print(points)
-            # points.sort()
+            print(points1)
             print(points)
 
 
@@ -56,9 +59,6 @@ def main() -> None:
             big_angles:int = 0
             small_angles:int = 0
 
-            angle_measures:list[float] = []
-
-            # print(points)
             
             for i in range(len(points)-1):
 
@@ -75,26 +75,12 @@ def main() -> None:
                 p2_angle = math.atan2(p2_y-p1_y, p2_x-p1_x)
 
                 # print(p2_angle)
-                print(f"point2 angle negative: {math.degrees(p2_angle)}")
+                # print(f"point2 angle negative: {math.degrees(p2_angle)}")
 
 
                 
                 p3_angle = math.atan2(p3_y-p1_y, p3_x-p1_x)
-                print(f"point3 angle negative: {math.degrees(p3_angle)}")
-
-
-                print(p2_x)
-                print(p2_y)
-                print(math.degrees(p2_angle))
-
-                print(p3_x)
-                print(p3_y)
-                print(math.degrees(p3_angle))
-
-                # if p3_angle > p2_angle:
-                #     angle_measure = p3_angle - p2_angle
-                # else: 
-                #     angle_measure = p2_angle - p3_angle
+                # print(f"point3 angle negative: {math.degrees(p3_angle)}")
 
                 angle_measure = p3_angle - p2_angle
 
@@ -104,67 +90,54 @@ def main() -> None:
 
                 print(f"angle: {math.degrees(final_angle)}")
 
-                angle_measures.append(final_angle) 
-
-                # print(angle_measure)
-
 
                 if final_angle > math.pi:
                     big_angles += 1
                 elif final_angle < math.pi:
                     small_angles += 1
 
-            # final_angle_2 = 2*math.pi - angle_measures[0] - angle_measures[1]
+                angle_to_region.append((final_angle, regions[i]))
 
-            # print(f"final angle: {math.degrees(final_angle_2)}")
+                print(angle_to_region[i])
 
-            # if final_angle_2 > math.pi:
-            #         big_angles += 1
-            # elif final_angle_2 < math.pi:
-            #     small_angles += 1
-            
-            # print(small_angles)
-            # print(big_angles)
-
-            #  {"id":"E", "coords":[6,5], "kind-list":["D", 2, "B", 1, "G", 3, "D"]},
-
-            links = []
+            links:list[tuple[int,int]] = []
+            # links:dict[int, list[int]] = {}
             if small_angles == 3:
                 vertex["type"] = "FORK"
                 print("Three Links Generated")
                 for i in range(len(regions)):
+                    # links[regions[i]] = []
                     for j in range(i + 1, len(regions)):
                         links.append((regions[i], regions[j])) #type: ignore
-                        print()
+                        # links[regions[i]].append(regions[j]) #type: ignore
+                        # print()
                         print("Link created between regions", {regions[i]},{regions[j]} )
+                    # print("Link created between regions", {regions[i]},{links.get(regions[i])}) #type: ignore
                         
             elif small_angles == 2 and big_angles == 1:
                 vertex["type"] = "ARROW"
                 print("One link generated")
+                print(regions)
                 if len(regions) >= 2:
-                    links.append((regions[0], regions[1])) #type: ignore
-                    print()
-                    print("Link created between regions", {regions[0]},{regions[1]} )
+                    
+                    angle_to_region.sort()
+
+                    print(angle_to_region)
+
+                    links.append((angle_to_region[0][1], angle_to_region[1][1])) #type: ignore
+
+                    print("Link created between regions", {angle_to_region[0][1]},{angle_to_region[1][1]} )
+
             else: 
                 vertex["type"] = "T"
                 print("No links generated")
             
             print("TYPE:",vertex["type"])
 
-    # angle1 = math.atan2(1, 1)
-    # print(f"Angle for (1, 1): {angle1} radians")
+            print(links)
 
-    # # Point in the third quadrant
-    # angle2 = math.atan2(-1, -1)
-    # print(f"Angle for (-1, -1): {angle2} radians")
+    
 
-    # # Point in the second quadrant
-    # angle3 = math.atan2(1, -1)
-    # print(f"Angle for (1, -1): {angle3} radians")
 
-    # # Point in the fourth quadrant
-    # angle4 = math.atan2(-1, 1)
-    # print(f"Angle for (-1, 1): {angle4} radians")
-    # # print(vertex_dict)
 if __name__ == "__main__":
     main()
